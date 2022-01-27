@@ -39,7 +39,7 @@ namespace BarberShop.Repositories
                             LastName = reader.GetString(reader.GetOrdinal("LastName")),
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                             PhoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber")),
-                            Email = reader.GetString(reader.GetOrdinal(" Email")),
+                            Email = reader.GetString(reader.GetOrdinal("Email")),
                             Address = reader.GetString(reader.GetOrdinal("Address"))
 
 

@@ -18,7 +18,8 @@ namespace BarberShop.Controllers
         // GET: CustomerController
         public ActionResult Index()
         {
-            return View();
+            var customers = _customerRepo.GetAllCustomers();
+            return View(customers);
         }
 
         // GET: CustomerController/Details/5
