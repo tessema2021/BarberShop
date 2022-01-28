@@ -39,7 +39,7 @@ namespace BarberShop.Repositories
                             LastName = reader.GetString(reader.GetOrdinal("LastName")),
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                             PhoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber")),
-                            Email = reader.GetString(reader.GetOrdinal(" Email")),
+                            Email = reader.GetString(reader.GetOrdinal("Email")),
                             Address = reader.GetString(reader.GetOrdinal("Address"))
 
 
@@ -51,6 +51,35 @@ namespace BarberShop.Repositories
 
 
                     return customers;
+
+                }
+            }
+        }
+
+
+        public void AddCustomer(Customer customer)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                               INSERT INTO Customer (FirstName,LastName,UserProfileId,PhoneNumber,Email,Address)
+                               OUTPUT INSERTED.ID
+                               VALUES (@firstName, @lastName, @userProfileId, @PhoneNumber, @email,@address);
+                                ";
+
+                    cmd.Parameters.AddWithValue("@firstName", customer.FirstName);
+                    cmd.Parameters.AddWithValue("@lastName", customer.LastName);
+                    cmd.Parameters.AddWithValue("@userProfileId", customer.UserProfileId);
+                    cmd.Parameters.AddWithValue("@phoneNumber", customer.PhoneNumber);
+                    cmd.Parameters.AddWithValue("@email", customer.Email);
+                    cmd.Parameters.AddWithValue("@address", customer.Address);
+
+                    int newlyCreatedId = (int)cmd.ExecuteScalar();
+
+                    customer.Id = newlyCreatedId;
 
                 }
             }
