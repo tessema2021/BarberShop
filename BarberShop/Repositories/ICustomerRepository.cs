@@ -8,5 +8,6 @@ namespace BarberShop.Repositories
     {
 
         List<Customer> GetAllCustomers();
+        void AddCustomer(Customer customer);
     }
 }
