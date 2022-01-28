@@ -9,5 +9,8 @@ namespace BarberShop.Repositories
 
         List<Customer> GetAllCustomers();
         void AddCustomer(Customer customer);
+        void UpdateCustomer(Customer customer);
+        Customer GetCustomerById(int Id);
+        void DeleteCustomer(int customerId);
     }
 }
