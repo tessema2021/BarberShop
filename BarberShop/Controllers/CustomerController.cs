@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace BarberShop.Controllers
@@ -42,8 +43,12 @@ namespace BarberShop.Controllers
         {
             try
             {
+               
+                int userProfileId = GetCurrentUserId();
+                customer.UserProfileId = userProfileId;
+                customer.CreateDateTime = DateTime.Now;
                 _customerRepo.AddCustomer(customer);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
@@ -54,43 +59,92 @@ namespace BarberShop.Controllers
         // GET: CustomerController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            int userProfileId = GetCurrentUserId();
+            Customer customer = _customerRepo.GetCustomerById(id);
+
+
+            if (customer.UserProfileId == userProfileId)
+            {
+                return View(customer);
+            }
+
+            return Unauthorized();
         }
 
         // POST: CustomerController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Customer customer)
         {
-            try
+            int userProfileId = GetCurrentUserId();
+            customer.CreateDateTime = DateTime.Now;
+            Customer Exstingcustomer = _customerRepo.GetCustomerById(id);
+
+
+            if (Exstingcustomer.UserProfileId == userProfileId)
             {
-                return RedirectToAction(nameof(Index));
+
+                try
+                {
+                    _customerRepo.UpdateCustomer(customer);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    return View(customer);
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            return Unauthorized();
         }
 
         // GET: CustomerController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            int userProfileId = GetCurrentUserId();
+            Customer customer = _customerRepo.GetCustomerById(id);
+
+
+            if (customer.UserProfileId == userProfileId)
+            {
+                return View(customer);
+            }
+
+            return Unauthorized();
         }
 
         // POST: CustomerController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Customer customer)
         {
-            try
+            int userProfileId = GetCurrentUserId();
+            Customer Exstingcustomer = _customerRepo.GetCustomerById(id);
+
+            if (Exstingcustomer.UserProfileId == userProfileId)
             {
-                return RedirectToAction(nameof(Index));
+
+                try
+                {
+                    _customerRepo.DeleteCustomer(id);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    return View(customer);
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            return Unauthorized();
         }
+
+
+        private int GetCurrentUserId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
+        }
+
+
     }
 }
