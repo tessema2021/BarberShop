@@ -46,6 +46,17 @@ VALUES
     (2, 'Bekele','haile','456-335-8945', SYSDATETIME(),'bekele@gmail.com','234 madison st,Madison', 3)
 SET IDENTITY_INSERT [Customer] OFF
 
+
+SET IDENTITY_INSERT [CustomerService] ON
+INSERT INTO [CustomerService]
+    ([Id], [CustomerId], [ServiceId])
+VALUES
+    (1, 1,1),
+    (2, 2,2)
+   
+SET IDENTITY_INSERT [CustomerService] OFF
+
+
 SET IDENTITY_INSERT [Transaction] ON
 INSERT INTO [Transaction]
     ([Id], [Comment], [CustomerId], [UserProfileId],[TransactionDate])
@@ -62,7 +73,6 @@ VALUES
     (1,  1, 1),
     (2,  2, 2)
 SET IDENTITY_INSERT [TransactionService] OFF
-
 
 
 
