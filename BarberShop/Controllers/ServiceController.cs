@@ -1,4 +1,5 @@
-﻿using BarberShop.Repositories;
+﻿using BarberShop.Models;
+using BarberShop.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -39,55 +40,70 @@ namespace BarberShop.Controllers
         // POST: ServiceController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Service service)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+
+               
+                _serviceRepo.AddService(service);
+                return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return View(service);
             }
         }
 
         // GET: ServiceController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+           
+            Service service = _serviceRepo.GetServiceById(id);
+
+                return View(service);
+            
         }
 
         // POST: ServiceController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Service service)
         {
             try
             {
+                _serviceRepo.UpdateService(service);
                 return RedirectToAction(nameof(Index));
             }
             catch
             {
-                return View();
+                return View(service);
             }
         }
 
         // GET: ServiceController/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Service service = _serviceRepo.GetServiceById(id);
+            if (service == null)
+            {
+                return StatusCode(404);
+            }
+            return View(service);
+
         }
 
         // POST: ServiceController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult Delete(int id, Service service)
         {
             try
             {
+                _serviceRepo.DeleteService(id);
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
                 return View();
             }

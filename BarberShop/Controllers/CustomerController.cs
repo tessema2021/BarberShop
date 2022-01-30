@@ -27,7 +27,14 @@ namespace BarberShop.Controllers
         // GET: CustomerController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            Customer customer = _customerRepo.GetCustomerById(id);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return View(customer);
         }
 
         // GET: CustomerController/Create

@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS [Service];
 DROP TABLE IF EXISTS [Transaction];
 DROP TABLE IF EXISTS [TransactionService];
 DROP TABLE IF EXISTS [UserType];
+DROP TABLE IF EXISTS [CustomerService];
 
 
 
@@ -54,6 +55,14 @@ CREATE TABLE [UserService] (
 )
 GO
 
+CREATE TABLE [CustomerService] (
+  [Id] int PRIMARY KEY IDENTITY(1, 1),
+  [CustomerId] int NOT NULL,
+  [ServiceId] int NOT NULL
+)
+GO
+
+
 CREATE TABLE [Service] (
   [Id] int PRIMARY KEY IDENTITY(1, 1),
   [Name] nvarchar(255) NOT NULL,
@@ -79,6 +88,13 @@ GO
 
 ALTER TABLE [UserService] ADD FOREIGN KEY ([UserProfileId]) REFERENCES [UserProfile] ([Id])
 GO
+
+ALTER TABLE [CustomerService] ADD FOREIGN KEY ([customerId]) REFERENCES [Customer] ([Id])
+GO
+
+ALTER TABLE [CustomerService] ADD FOREIGN KEY ([ServiceId]) REFERENCES [Service] ([Id])
+GO
+
 
 ALTER TABLE [UserProfile] ADD FOREIGN KEY ([UserTypeId]) REFERENCES [UserType] ([Id])
 GO
