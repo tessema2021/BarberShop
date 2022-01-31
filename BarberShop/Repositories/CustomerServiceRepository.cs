@@ -61,7 +61,7 @@ namespace BarberShop.Repositories
             }
         }
 
-        public List<CustomerService> GetAllCUstomerServicesByCustomerId(int id)
+       /* public List<CustomerService> GetAllCUstomerServicesByCustomerId(int id)
         {
             using (var conn = Connection)
             {
@@ -100,7 +100,7 @@ namespace BarberShop.Repositories
                     return customerServices;
                 }
             }
-        }
+        }*/
 
 
 
