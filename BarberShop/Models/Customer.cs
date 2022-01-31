@@ -15,5 +15,6 @@ namespace BarberShop.Models
         public string Email { get; set; }
         public DateTime CreateDateTime { get; set; }
         public string Address { get; set; }
+        public List<Service> Services { get; set; }
     }
 }

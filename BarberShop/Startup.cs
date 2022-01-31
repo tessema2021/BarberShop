@@ -33,6 +33,7 @@ namespace BarberShop
             services.AddTransient<IUserProfileRepository, UserProfileRepository>();
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IServiceRepository, ServiceRepository>();
+            services.AddTransient<ICustomerServiceRepository, CustomerServiceRepository>();
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => options.Cookie.SameSite = SameSiteMode.Strict);

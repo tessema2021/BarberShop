@@ -12,5 +12,6 @@ namespace BarberShop.Repositories
         void UpdateCustomer(Customer customer);
         Customer GetCustomerById(int Id);
         void DeleteCustomer(int customerId);
+        List<Customer> GetAllCustomerServicesByCustomerId(int id);
     }
 }

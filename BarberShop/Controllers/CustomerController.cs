@@ -13,9 +13,13 @@ namespace BarberShop.Controllers
     public class CustomerController : Controller
     {
         private readonly ICustomerRepository _customerRepo;
-        public CustomerController(ICustomerRepository customerRepository)
+        private readonly IServiceRepository _serviceRepo;
+        private readonly ICustomerServiceRepository _customerServiceRepo;
+        public CustomerController(ICustomerRepository customerRepository,IServiceRepository serviceRepository,ICustomerServiceRepository customerServiceRepository)
         {
             _customerRepo = customerRepository;
+            _serviceRepo = serviceRepository;
+            _customerServiceRepo = customerServiceRepository;
         }
         // GET: CustomerController
         public ActionResult Index()
@@ -28,7 +32,7 @@ namespace BarberShop.Controllers
         public ActionResult Details(int id)
         {
             Customer customer = _customerRepo.GetCustomerById(id);
-
+            customer.Services = _serviceRepo.GetAllServices();
             if (customer == null)
             {
                 return NotFound();
