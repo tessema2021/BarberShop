@@ -103,6 +103,9 @@ namespace BarberShop.Repositories
             }
         }
 
+
+
+
         public void Add(UserProfile userProfile)
         {
             using (SqlConnection conn = Connection)
