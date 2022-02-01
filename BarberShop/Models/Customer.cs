@@ -16,5 +16,6 @@ namespace BarberShop.Models
         public DateTime CreateDateTime { get; set; }
         public string Address { get; set; }
         public List<Service> Services { get; set; }
+        public UserProfile UserProfile { get; set; }
     }
 }
