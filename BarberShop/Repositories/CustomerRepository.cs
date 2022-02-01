@@ -1,4 +1,5 @@
 ﻿using BarberShop.Models;
+using BarberShop.Utils;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -88,43 +89,42 @@ namespace BarberShop.Repositories
         }
 
 
-        public List<Customer> GetAllCustomerServicesByCustomerId(int id)
+        public Customer GetById(int Id)
         {
-            using (var conn = Connection)
+            using (SqlConnection conn = Connection)
             {
                 conn.Open();
-                using (var cmd = conn.CreateCommand())
+                using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                           SELECT Customer.Id, Customer.FirstName,Customer.FirstName, Service.Name as 'Service Name',Service.Cost as 'Service Cost'
-                            FROM CustomerService
-                            LEFT JOIN Customer ON CustomerService.CustomerId = Customer.Id
-                            LEFT JOIN Service on CustomerService.ServiceId = Service.Id
-                            WHERE Customer.Id = @customerId";
+                                    SELECT  Id,FirstName,LastName,UserProfileId, CreateDateTime,PhoneNumber,Email,Address
+                                    FROM CUstomer
+                                    WHERE Id = @id";
 
-                    cmd.Parameters.AddWithValue("@customerId", id);
+                    cmd.Parameters.AddWithValue("@id", Id);
 
-                    var customers = new List<Customer>();
+                    Customer customer = null;
 
                     var reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
+                    if (reader.Read())
                     {
-                        Customer customer = new Customer()
+                         customer = new Customer
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            FirstName = reader.GetString(reader.GetOrdinal("Firstname")),
-                            LastName = reader.GetString(reader.GetOrdinal("Lastname")),
-                          /*  Service = new Service
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("ServiceId")),
-                                Name = reader.GetString(reader.GetOrdinal("serviceName"))
-                            }*/
+                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
+                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("createDateTime")),
+                            PhoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber")),
+                            Email = reader.GetString(reader.GetOrdinal("Email")),
+                            Address = reader.GetString(reader.GetOrdinal("Address"))
+
+
                         };
-                        customers.Add(customer);
                     }
                     reader.Close();
-                    return customers;
+
+                    return customer;
                 }
             }
         }
@@ -140,37 +140,57 @@ namespace BarberShop.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                                    SELECT Id,FirstName, LastName,UserProfileId, CreateDateTime,PhoneNumber, Email, Address
-                                    FROM Customer
-                                    WHERE Id = @id";
-
+                                  SELECT c.Id, c.FirstName , c.LastName , c.UserProfileId,c.CreateDateTime,c.PhoneNumber,c.Email,c.Address,
+                                     Service.[Name] ,Service.Cost ,
+                                     CustomerService.ServiceId
+                                     FROM Customer c
+                                     LEFT JOIN CustomerService ON c.Id = CustomerService.CustomerId
+                                     LEFT JOIN Service on Service.Id = CustomerService.ServiceId
+                                     WHERE c.Id = @id";
                     cmd.Parameters.AddWithValue("@id", Id);
-
-                    Customer customer = null;
-
-                    var reader = cmd.ExecuteReader();
-                    if (reader.Read())
+                    using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        customer = new Customer
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
-                            LastName = reader.GetString(reader.GetOrdinal("LastName")),
-                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
-                            CreateDateTime = reader.GetDateTime(reader.GetOrdinal("createDateTime")),
-                            PhoneNumber = reader.GetString(reader.GetOrdinal("PhoneNumber")),
-                            Email = reader.GetString(reader.GetOrdinal("Email")),
-                            Address = reader.GetString(reader.GetOrdinal("Address")),
-                            
-                        };
-                    }
-                    reader.Close();
 
-                    return customer;
+                         Customer customer = null;
+                        while (reader.Read())
+                        {
+
+                            if (customer == null)
+                            {
+                                customer = new Customer()
+                                {
+                                    Id = DbUtils.GetInt(reader,"Id"),
+                                    FirstName = DbUtils.GetString(reader, "FirstName"),
+                                    LastName = DbUtils.GetString(reader, "LastName"),
+                                    CreateDateTime = DbUtils.GetDateTime(reader, "CreateDateTime"),
+                                    PhoneNumber = DbUtils.GetString(reader, "PhoneNumber"),
+                                    Email = DbUtils.GetString(reader, "Email"),
+                                    Address = DbUtils.GetString(reader, "Address"),
+                                    UserProfileId = DbUtils.GetInt(reader, "UserProfileId"),
+                                
+                                    Services = new List<Service>()
+                                };
+
+                                
+                            }
+
+                            if (DbUtils.IsNotDbNull(reader, "ServiceId"))
+                            {
+                                customer.Services.Add(new Service()
+                                {
+                                    Id = DbUtils.GetInt(reader, "Id"),
+                                    Name = DbUtils.GetString(reader, "Name"),
+                                    Cost = DbUtils.GetInt(reader, "Cost"),
+                                   
+                                });
+                            }
+                        }
+
+                        return customer;
+                    }
                 }
             }
         }
-
 
 
 

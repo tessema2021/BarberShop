@@ -31,8 +31,8 @@ namespace BarberShop.Controllers
         // GET: CustomerController/Details/5
         public ActionResult Details(int id)
         {
-            Customer customer = _customerRepo.GetCustomerById(id);
-            customer.Services = _serviceRepo.GetAllServices();
+           Customer customer = _customerRepo.GetCustomerById(id);
+            
             if (customer == null)
             {
                 return NotFound();
@@ -71,7 +71,7 @@ namespace BarberShop.Controllers
         public ActionResult Edit(int id)
         {
             int userProfileId = GetCurrentUserId();
-            Customer customer = _customerRepo.GetCustomerById(id);
+            Customer customer = _customerRepo.GetById(id);
 
 
             if (customer.UserProfileId == userProfileId)
@@ -89,7 +89,7 @@ namespace BarberShop.Controllers
         {
             int userProfileId = GetCurrentUserId();
             customer.CreateDateTime = DateTime.Now;
-            Customer Exstingcustomer = _customerRepo.GetCustomerById(id);
+            Customer Exstingcustomer = _customerRepo.GetById(id);
 
 
             if (Exstingcustomer.UserProfileId == userProfileId)
@@ -113,11 +113,12 @@ namespace BarberShop.Controllers
         public ActionResult Delete(int id)
         {
             int userProfileId = GetCurrentUserId();
-            Customer customer = _customerRepo.GetCustomerById(id);
+            Customer customer = _customerRepo.GetById(id);
 
 
             if (customer.UserProfileId == userProfileId)
             {
+               
                 return View(customer);
             }
 
@@ -130,7 +131,7 @@ namespace BarberShop.Controllers
         public ActionResult Delete(int id, Customer customer)
         {
             int userProfileId = GetCurrentUserId();
-            Customer Exstingcustomer = _customerRepo.GetCustomerById(id);
+            Customer Exstingcustomer = _customerRepo.GetById(id);
 
             if (Exstingcustomer.UserProfileId == userProfileId)
             {
