@@ -13,6 +13,7 @@ namespace BarberShop.Repositories
          Customer GetById(int Id);
         Customer GetCustomerById(int Id);
         void DeleteCustomer(int customerId);
+
        
     }
 }

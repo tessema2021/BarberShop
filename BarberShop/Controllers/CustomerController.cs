@@ -1,5 +1,7 @@
 ﻿using BarberShop.Models;
+using BarberShop.Models.ViewModels;
 using BarberShop.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,7 +11,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace BarberShop.Controllers
-{
+{     [Authorize]
     public class CustomerController : Controller
     {
         private readonly ICustomerRepository _customerRepo;
@@ -44,6 +46,7 @@ namespace BarberShop.Controllers
         // GET: CustomerController/Create
         public ActionResult Create()
         {
+           
             return View();
         }
 
@@ -52,19 +55,25 @@ namespace BarberShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Customer customer)
         {
+
+
             try
             {
-               
                 int userProfileId = GetCurrentUserId();
                 customer.UserProfileId = userProfileId;
                 customer.CreateDateTime = DateTime.Now;
+              
+
                 _customerRepo.AddCustomer(customer);
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
+                
                 return View(customer);
             }
+
+            
         }
 
         // GET: CustomerController/Edit/5
@@ -72,6 +81,7 @@ namespace BarberShop.Controllers
         {
             int userProfileId = GetCurrentUserId();
             Customer customer = _customerRepo.GetById(id);
+            
 
 
             if (customer.UserProfileId == userProfileId)
@@ -90,6 +100,7 @@ namespace BarberShop.Controllers
             int userProfileId = GetCurrentUserId();
             customer.CreateDateTime = DateTime.Now;
             Customer Exstingcustomer = _customerRepo.GetById(id);
+          
 
 
             if (Exstingcustomer.UserProfileId == userProfileId)

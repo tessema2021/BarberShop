@@ -24,24 +24,6 @@
             @Html.DisplayFor(model => model.LastName)
         </dd>
        
-        <tb>
-            <h6>List Of Services</h6>
-           
-               
-
-                @foreach (var service in Model.Services)
-                {
-                    <ul>
-                        <li>
-                      @service.Name @service.Cost
-                    </li>
-                </ul>
-            }
-
-
-        </tb>
-
-
 
     </dl>
 </div>

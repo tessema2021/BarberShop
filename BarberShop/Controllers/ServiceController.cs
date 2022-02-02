@@ -28,7 +28,14 @@ namespace BarberShop.Controllers
         // GET: ServiceController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            Service service = _serviceRepo.GetServiceById(id);
+
+            if (service == null)
+            {
+                return NotFound();
+            }
+
+            return View(service);
         }
 
         // GET: ServiceController/Create

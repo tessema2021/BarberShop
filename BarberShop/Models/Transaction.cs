@@ -10,7 +10,10 @@ namespace BarberShop.Models
         public int Id { get; set; }
         public string Comment { get; set; }
         public int UserProfileId { get; set; }
+        public UserProfile UserProfile { get; set; }
         public int CustomerId { get; set; }
+        public Customer Customer { get; set; }
+        public List<Customer> CustomerList { get; set; }
         public DateTime TransactionDate { get; set; }
     }
 }

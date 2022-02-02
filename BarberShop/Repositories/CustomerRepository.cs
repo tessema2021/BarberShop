@@ -69,13 +69,12 @@ namespace BarberShop.Repositories
                     cmd.CommandText = @"
                                INSERT INTO Customer (FirstName,LastName,UserProfileId, CreateDateTime,PhoneNumber,Email,Address)
                                OUTPUT INSERTED.ID
-                               VALUES (@firstName, @lastName, @userProfileId,@createDateTime, @PhoneNumber, @email,@address);
+                               VALUES (@firstName, @lastName, @userProfileId,SYSDateTime(), @PhoneNumber, @email,@address);
                                 ";
 
                     cmd.Parameters.AddWithValue("@firstName", customer.FirstName);
                     cmd.Parameters.AddWithValue("@lastName", customer.LastName);
                     cmd.Parameters.AddWithValue("@userProfileId", customer.UserProfileId);
-                    cmd.Parameters.AddWithValue("@createDateTime", customer.CreateDateTime);
                     cmd.Parameters.AddWithValue("@phoneNumber", customer.PhoneNumber);
                     cmd.Parameters.AddWithValue("@email", customer.Email);
                     cmd.Parameters.AddWithValue("@address", customer.Address);
