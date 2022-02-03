@@ -7,9 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BarberShop.Controllers
 {
+    [Authorize]
     public class TransactionController : Controller
     {
         private readonly ITransactionRepository _transactionRepo;
@@ -29,6 +31,20 @@ namespace BarberShop.Controllers
         public ActionResult Details(int id)
         {
             Transaction  transaction = _transactionRepo.GetById(id);
+
+            if (transaction == null)
+            {
+                return NotFound();
+            }
+
+            return View(transaction);
+        }
+
+        public ActionResult CustomerTransactions(int id)
+        {
+            var transaction = _transactionRepo.GetByCustomerId(id);
+            ViewData["CustomerId"] = id;
+
 
             if (transaction == null)
             {
@@ -65,8 +81,17 @@ namespace BarberShop.Controllers
         // GET: TransactionController/Edit/5
         public ActionResult Edit(int id)
         {
+            int userProfileId = GetCurrentUserId();
             Transaction transaction = _transactionRepo.GetById(id);
-            return View();
+
+
+
+            if (transaction.UserProfileId == userProfileId)
+            {
+                return View(transaction);
+            }
+
+            return Unauthorized();
         }
 
         // POST: TransactionController/Edit/5
@@ -74,26 +99,39 @@ namespace BarberShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Transaction transaction)
         {
-            try
+            int userProfileId = GetCurrentUserId();
+            transaction.TransactionDate = DateTime.Now;
+            Transaction Exstingtransaction = _transactionRepo.GetById(id);
+
+
+
+            if (Exstingtransaction.UserProfileId == userProfileId)
             {
-                _transactionRepo.UpdateTransaction(transaction);
-                return RedirectToAction(nameof(Index));
+
+                try
+                {
+                    _transactionRepo.UpdateTransaction(transaction);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    return View(transaction);
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            return Unauthorized();
         }
 
         // GET: TransactionController/Delete/5
         public ActionResult Delete(int id)
         {
+            int userProfileId = GetCurrentUserId();
             Transaction transaction = _transactionRepo.GetById(id);
-            if (transaction == null)
+            if (transaction.UserProfileId == userProfileId)
             {
-                return StatusCode(404);
+                return View(transaction);
             }
-            return View(transaction);
+            return Unauthorized();
         }
 
         // POST: TransactionController/Delete/5
@@ -101,15 +139,21 @@ namespace BarberShop.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, Transaction transaction)
         {
-            try
+            int userProfileId = GetCurrentUserId();
+            Transaction Exstingtransaction = _transactionRepo.GetById(id);
+            if (Exstingtransaction.UserProfileId == userProfileId)
             {
-                _transactionRepo.DeleteTransaction(id);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    _transactionRepo.DeleteTransaction(id);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    return View(transaction);
+                }
             }
-            catch (Exception ex)
-            {
-                return View();
-            }
+            return Unauthorized();
         }
 
 

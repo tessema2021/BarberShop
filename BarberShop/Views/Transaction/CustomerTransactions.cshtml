@@ -1,0 +1,40 @@
+﻿@model IEnumerable<BarberShop.Models.Transaction>
+
+@{
+    ViewData["Title"] = "CustomerTransasctions";
+}
+
+<h1>Customer Transasctions</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.Comment)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+           
+            <td>
+                @Html.DisplayFor(modelItem => item.Comment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TransactionDate)
+            </td>
+          
+        </tr>
+}
+    </tbody>
+</table>
+<div>
+    <a asp-controller="Customer" asp-action="Details" asp-route-id="@ViewData["CustomerId"]">Back to Customer</a>
+</div>

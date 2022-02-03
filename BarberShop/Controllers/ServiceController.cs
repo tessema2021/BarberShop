@@ -36,7 +36,9 @@ namespace BarberShop.Controllers
             }
 
             return View(service);
+
         }
+       
 
         // GET: ServiceController/Create
         public ActionResult Create()

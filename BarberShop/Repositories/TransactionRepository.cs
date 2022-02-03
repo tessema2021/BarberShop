@@ -117,6 +117,47 @@ namespace BarberShop.Repositories
             }
         }
 
+        public List<Transaction> GetByCustomerId(int Id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                                    SELECT Id, Comment, UserProfileId, TransactionDate, CustomerId
+                                    FROM [Transaction]  
+                                    WHERE CustomerId = @id";
+
+                    cmd.Parameters.AddWithValue("@id", Id);
+
+                    List<Transaction> transactions = new List<Transaction>();
+
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+
+                        Transaction transaction = new Transaction
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Comment = reader.GetString(reader.GetOrdinal("Comment")),
+                            TransactionDate = reader.GetDateTime(reader.GetOrdinal("TransactionDate")),
+                            CustomerId = reader.GetInt32(reader.GetOrdinal("CustomerId")),
+                        
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
+                         
+
+                        };
+
+                        transactions.Add(transaction);
+                    }
+
+                    return transactions;
+                }
+            }
+        }
+
+
         public void AddTransaction(Transaction transaction)
         {
             using (SqlConnection conn = Connection)
@@ -176,7 +217,7 @@ namespace BarberShop.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                            DELETE FROM Transaction
+                            DELETE FROM [Transaction]
                             WHERE Id = @id
                         ";
 

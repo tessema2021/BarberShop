@@ -10,5 +10,6 @@ namespace BarberShop.Repositories
         Transaction GetById(int Id);
         void UpdateTransaction(Transaction transaction);
         void DeleteTransaction(int transactionId);
+        List<Transaction> GetByCustomerId(int Id);
     }
 }
