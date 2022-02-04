@@ -24,6 +24,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Customer)
             </th>
+           
             <th>
                 @Html.DisplayNameFor(model => model.TransactionDate)
             </th>
@@ -43,15 +44,16 @@
                 @Html.DisplayFor(modelItem => item.UserProfile.FullName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Customer.FirstName)
+                @Html.DisplayFor(modelItem => item.Customer.FullName)
             </td>
+           
             <td>
                 @Html.DisplayFor(modelItem => item.TransactionDate)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new {  id=item.Id })
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>
 }

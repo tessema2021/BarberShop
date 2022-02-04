@@ -15,5 +15,8 @@ namespace BarberShop.Models
         public Customer Customer { get; set; }
         public List<Customer> CustomerList { get; set; }
         public DateTime TransactionDate { get; set; }
+        public Service Service { get; set; }
+        public int ServiceId { get; set; }
+     
     }
 }

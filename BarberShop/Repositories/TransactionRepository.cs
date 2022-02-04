@@ -80,6 +80,24 @@ namespace BarberShop.Repositories
                 }
             }
         }
+       public void CreateTransactionService(int serviceId , int transactionId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                         INSERT INTO TransactionService (TransactionId,ServiceId)
+                             Values(@transactionId,@serviceId)    
+      ";
+                    cmd.Parameters.AddWithValue("@transactionId", transactionId);
+                    cmd.Parameters.AddWithValue("@serviceId", serviceId);
+                    cmd.ExecuteNonQuery();
+                }
+                
+            }
+        }
 
         public Transaction GetById(int Id)
         {
@@ -117,6 +135,54 @@ namespace BarberShop.Repositories
             }
         }
 
+        public Transaction GetTransactionById(int Id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                                   SELECT t.Id, t.Comment, t.UserProfileId, t.TransactionDate, t.CustomerId,
+                                    ts.ServiceId
+                                    FROM [Transaction] t  
+                                    Left join TransactionService ts on ts.TransactionId = t.Id
+                                    WHERE t.Id = @Id";
+
+                    cmd.Parameters.AddWithValue("@id", Id);
+
+                    Transaction transaction = null;
+
+                    var reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        transaction = new Transaction
+                        {
+                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                            Comment = reader.GetString(reader.GetOrdinal("Comment")),
+                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
+                            CustomerId = reader.GetInt32(reader.GetOrdinal("CustomerId")),
+                            ServiceId = reader.GetInt32(reader.GetOrdinal("ServiceId")),
+                            Service = new Service
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                Cost = reader.GetInt32(reader.GetOrdinal("Cost")),
+
+                            }
+
+
+                        };
+                    }
+                    reader.Close();
+
+                    return transaction;
+                }
+            }
+        }
+
+
+
         public List<Transaction> GetByCustomerId(int Id)
         {
             using (SqlConnection conn = Connection)
@@ -143,11 +209,11 @@ namespace BarberShop.Repositories
                             Comment = reader.GetString(reader.GetOrdinal("Comment")),
                             TransactionDate = reader.GetDateTime(reader.GetOrdinal("TransactionDate")),
                             CustomerId = reader.GetInt32(reader.GetOrdinal("CustomerId")),
-                        
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
-                         
-
+                        
                         };
+
+
 
                         transactions.Add(transaction);
                     }
@@ -192,9 +258,9 @@ namespace BarberShop.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                            UPDATE Transaction
+                            UPDATE [Transaction]
                             SET 
-                                Comment = @comment, 
+                                Comment = @comment 
                              
                             WHERE Id = @id";
 

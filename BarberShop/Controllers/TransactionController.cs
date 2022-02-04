@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using BarberShop.Models.ViewModels;
 
 namespace BarberShop.Controllers
 {
@@ -15,9 +16,13 @@ namespace BarberShop.Controllers
     public class TransactionController : Controller
     {
         private readonly ITransactionRepository _transactionRepo;
-        public TransactionController(ITransactionRepository TransactionRepository )
+        private readonly ICustomerRepository _customerRepository;
+        private readonly IServiceRepository _serviceRepository;
+        public TransactionController(ITransactionRepository transactionRepository, ICustomerRepository customerRepository, IServiceRepository serviceRepository)
         {
-            _transactionRepo = TransactionRepository;
+            _transactionRepo = transactionRepository;
+            _customerRepository = customerRepository;
+            _serviceRepository = serviceRepository;
         }
 
         // GET: TransactionController
@@ -39,7 +44,7 @@ namespace BarberShop.Controllers
 
             return View(transaction);
         }
-
+        //GET
         public ActionResult CustomerTransactions(int id)
         {
             var transaction = _transactionRepo.GetByCustomerId(id);
@@ -57,24 +62,37 @@ namespace BarberShop.Controllers
         // GET: TransactionController/Create
         public ActionResult Create()
         {
-            return View();
+            var vm = new TransactionFormViewModel();
+            List<Customer> customers = _customerRepository.GetAllCustomers();
+            List<Service> services = _serviceRepository.GetAllServices();
+            vm.Services = services;
+            vm.Customers = customers;
+            return View(vm);
         }
 
         // POST: TransactionController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Transaction transaction)
+        public ActionResult Create(TransactionFormViewModel vm)
         {
             try
             {
                 int userProfileId = GetCurrentUserId();
-                transaction.UserProfileId = userProfileId;
-                _transactionRepo.AddTransaction(transaction);
+                vm.Transaction.UserProfileId = userProfileId;
+                _transactionRepo.AddTransaction(vm.Transaction);
+                foreach(var serviceId in vm.SelectedServiceIds)
+                {
+                    _transactionRepo.CreateTransactionService(serviceId,vm.Transaction.Id);
+                }
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                return View(transaction);
+                List<Customer> customers = _customerRepository.GetAllCustomers();
+                List<Service> services = _serviceRepository.GetAllServices();
+                vm.Services = services;
+                vm.Customers = customers;
+                return View(vm);
             }
         }
 
