@@ -23,7 +23,7 @@ namespace BarberShop.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        SELECT Id,FirstName,LastName,UserProfileId, CreateDateTime,PhoneNumber,Email,Address
+                        SELECT Id,FirstName, LastName,UserProfileId, CreateDateTime,PhoneNumber,Email,Address
                          from Customer ;
                     ";
 
