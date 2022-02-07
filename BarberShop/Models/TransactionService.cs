@@ -11,6 +11,7 @@ namespace BarberShop.Models
         public int TransactionId { get; set; }
         public int ServiceId { get; set; }
         public Service Service { get; set; }
+        public List<Service> Services { get; set; }
         public Transaction Transaction { get; set; }
     }
 }
