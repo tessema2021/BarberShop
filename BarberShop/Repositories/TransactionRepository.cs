@@ -133,7 +133,7 @@ namespace BarberShop.Repositories
             }
         }
 
-        public Transaction GetTransactionById(int Id)
+       /* public Transaction GetTransactionById(int Id)
         {
             using (SqlConnection conn = Connection)
             {
@@ -177,7 +177,7 @@ namespace BarberShop.Repositories
                     return transaction;
                 }
             }
-        }
+        }*/
 
 
 
