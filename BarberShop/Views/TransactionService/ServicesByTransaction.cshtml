@@ -1,0 +1,40 @@
+﻿@model IEnumerable<BarberShop.Models.TransactionService>
+
+@{
+    ViewData["Title"] = "ServicesByTransaction";
+}
+
+<h1>List of Services </h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+           
+            <th>
+                @Html.DisplayNameFor(model => model.Service.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Service.Cost)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+          
+            <td>
+                @Html.DisplayFor(modelItem => item.Service.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Service.Cost)
+            </td>
+          
+        </tr>
+}
+    </tbody>
+</table>
+<div>
+    <a asp-controller="Transaction" asp-action="Details" asp-route-id="@ViewData["TransactionId"]">Back to Transaction</a>
+</div>

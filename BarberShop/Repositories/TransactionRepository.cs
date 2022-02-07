@@ -124,8 +124,6 @@ namespace BarberShop.Repositories
                             Comment = reader.GetString(reader.GetOrdinal("Comment")),
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                             CustomerId = reader.GetInt32(reader.GetOrdinal("CustomerId")),
-
-
                         };
                     }
                     reader.Close();

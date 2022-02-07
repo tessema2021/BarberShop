@@ -13,7 +13,9 @@ namespace BarberShop.Repositories
     {
        
         public CustomerRepository(IConfiguration config) : base(config) { }
+
         DateTime dateTime = DateTime.Now;
+
         public List<Customer> GetAllCustomers()
         {
 
