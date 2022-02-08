@@ -14,7 +14,7 @@ namespace BarberShop.Repositories
         DateTime dateTime = DateTime.Now;
 
 
-        public List<Transaction> GetAllTransactions()
+        public List<Transaction> GetAllTransactionsByUser(int id)
         {
 
             using (var conn = Connection)
@@ -29,9 +29,12 @@ namespace BarberShop.Repositories
                          from [Transaction] t
                             left join Customer c on t.CustomerId = c.Id
                             left join UserProfile up on t.UserProfileId = up.Id
+                             Where up.Id = @id;
+                          
                         
                     ";
-                  
+                    cmd.Parameters.AddWithValue("@id", id);
+
                     SqlDataReader reader = cmd.ExecuteReader();
 
                     List<Transaction> transactions = new List<Transaction>();
@@ -107,9 +110,11 @@ namespace BarberShop.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                                    SELECT Id, Comment, UserProfileId, TransactionDate, CustomerId
-                                    FROM [Transaction]  
-                                    WHERE Id = @id";
+                                    SELECT t.Id, t.Comment, t.UserProfileId, t.TransactionDate, t.CustomerId,
+                                          c.Id as CId, c.FirstName, c.LastName
+                                    FROM [Transaction] t
+                                   Left join Customer c on c.Id = t.CustomerId
+                                    WHERE t.Id = @id";
 
                     cmd.Parameters.AddWithValue("@id", Id);
 
@@ -124,7 +129,13 @@ namespace BarberShop.Repositories
                             Comment = reader.GetString(reader.GetOrdinal("Comment")),
                             UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                             CustomerId = reader.GetInt32(reader.GetOrdinal("CustomerId")),
-                        };
+                            Customer = new Customer()
+                            {
+                                FirstName = reader.GetString(reader.GetOrdinal("FirstName")),
+                                LastName = reader.GetString(reader.GetOrdinal("LastName"))
+                            },
+                          
+                    };
                     }
                     reader.Close();
 
@@ -132,53 +143,6 @@ namespace BarberShop.Repositories
                 }
             }
         }
-
-       /* public Transaction GetTransactionById(int Id)
-        {
-            using (SqlConnection conn = Connection)
-            {
-                conn.Open();
-                using (SqlCommand cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = @"
-                                   SELECT t.Id, t.Comment, t.UserProfileId, t.TransactionDate, t.CustomerId,
-                                    ts.ServiceId
-                                    FROM [Transaction] t  
-                                    Left join TransactionService ts on ts.TransactionId = t.Id
-                                    WHERE t.Id = @Id";
-
-                    cmd.Parameters.AddWithValue("@id", Id);
-
-                    Transaction transaction = null;
-
-                    var reader = cmd.ExecuteReader();
-                    if (reader.Read())
-                    {
-                        transaction = new Transaction
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            Comment = reader.GetString(reader.GetOrdinal("Comment")),
-                            UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
-                            CustomerId = reader.GetInt32(reader.GetOrdinal("CustomerId")),
-                            ServiceId = reader.GetInt32(reader.GetOrdinal("ServiceId")),
-                            Service = new Service
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
-                                Cost = reader.GetInt32(reader.GetOrdinal("Cost")),
-
-                            }
-
-
-                        };
-                    }
-                    reader.Close();
-
-                    return transaction;
-                }
-            }
-        }*/
-
 
 
         public List<Transaction> GetByCustomerId(int Id)

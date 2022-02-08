@@ -15,27 +15,33 @@ namespace BarberShop.Controllers
     [Authorize]
     public class TransactionController : Controller
     {
+        private readonly ITransactionServiceRepository _transactionServiceRepository;
         private readonly ITransactionRepository _transactionRepo;
         private readonly ICustomerRepository _customerRepository;
         private readonly IServiceRepository _serviceRepository;
-        public TransactionController(ITransactionRepository transactionRepository, ICustomerRepository customerRepository, IServiceRepository serviceRepository)
+        public TransactionController(ITransactionRepository transactionRepository, ICustomerRepository customerRepository, IServiceRepository serviceRepository,
+                  ITransactionServiceRepository transactionServiceRepository  )
         {
             _transactionRepo = transactionRepository;
             _customerRepository = customerRepository;
             _serviceRepository = serviceRepository;
+            _transactionServiceRepository = transactionServiceRepository;
         }
 
         // GET: TransactionController
         public ActionResult Index()
         {
-            var transactions = _transactionRepo.GetAllTransactions();
+            int userProfileId = GetCurrentUserId();
+            var transactions = _transactionRepo.GetAllTransactionsByUser(userProfileId);
             return View(transactions);
         }
 
         // GET: TransactionController/Details/5
         public ActionResult Details(int id)
         {
+           
             Transaction  transaction = _transactionRepo.GetById(id);
+            transaction.TransactionDate = DateTime.Now;
 
             if (transaction == null)
             {
@@ -101,12 +107,20 @@ namespace BarberShop.Controllers
         {
             int userProfileId = GetCurrentUserId();
             Transaction transaction = _transactionRepo.GetById(id);
+            List<Service> services = _serviceRepository.GetAllServices();
+            List<int> trasactionServices = _transactionServiceRepository.GetByTransactionId(id).Select(ts =>ts.Service.Id).ToList();
+            var vm = new TransactionFormViewModel()
 
+            {
 
+                Transaction = transaction,
+                Services = services,
+                SelectedServiceIds = trasactionServices
+            };
 
             if (transaction.UserProfileId == userProfileId)
             {
-                return View(transaction);
+                return View(vm);
             }
 
             return Unauthorized();
@@ -115,10 +129,10 @@ namespace BarberShop.Controllers
         // POST: TransactionController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Transaction transaction)
+        public ActionResult Edit(int id, TransactionFormViewModel vm)
         {
             int userProfileId = GetCurrentUserId();
-            transaction.TransactionDate = DateTime.Now;
+            vm.Transaction.TransactionDate = DateTime.Now;
             Transaction Exstingtransaction = _transactionRepo.GetById(id);
 
 
@@ -128,12 +142,20 @@ namespace BarberShop.Controllers
 
                 try
                 {
-                    _transactionRepo.UpdateTransaction(transaction);
+                    _transactionRepo.UpdateTransaction(vm.Transaction);
+                    _transactionServiceRepository.DeleteTransactionServices(id);
+                    foreach(var serviceId in vm.SelectedServiceIds)
+                    {
+                        _transactionRepo.CreateTransactionService(serviceId, id);
+                    }
                     return RedirectToAction(nameof(Index));
+
                 }
                 catch (Exception ex)
                 {
-                    return View(transaction);
+                    List<Service> services = _serviceRepository.GetAllServices();
+                    vm.Services = services;
+                    return View(vm);
                 }
             }
 
