@@ -42,7 +42,7 @@ namespace BarberShop.Repositories
                             ServiceId = reader.GetInt32(reader.GetOrdinal("ServiceId")),
                             Service = new Service()
                             {
-                                Id = DbUtils.GetInt(reader, "Id"),
+                                Id = DbUtils.GetInt(reader, "ServiceId"),
                                 Name = DbUtils.GetString(reader, "Name"),
                                 Cost = DbUtils.GetInt(reader, "Cost"),
 

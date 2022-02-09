@@ -145,7 +145,7 @@ namespace BarberShop.Repositories
         }
 
 
-        public List<Transaction> GetByCustomerId(int Id)
+        public List<Transaction> GetTransactionsByCustomerId(int Id)
         {
             using (SqlConnection conn = Connection)
             {

@@ -53,7 +53,7 @@ namespace BarberShop.Controllers
         //GET
         public ActionResult CustomerTransactions(int id)
         {
-            var transaction = _transactionRepo.GetByCustomerId(id);
+            var transaction = _transactionRepo.GetTransactionsByCustomerId(id);
             ViewData["CustomerId"] = id;
 
 

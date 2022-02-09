@@ -26,6 +26,7 @@ namespace BarberShop.Models
         public string Address { get; set; }
         public List<Service> Services { get; set; }
         public UserProfile UserProfile { get; set; }
+        [DisplayName("Name")]
         public string FullName
         {
             get

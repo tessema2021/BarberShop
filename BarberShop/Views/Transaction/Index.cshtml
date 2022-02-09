@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Transactions</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,44 +12,42 @@
 <table class="table">
     <thead>
         <tr>
+            @*<th>
+            @Html.DisplayNameFor(model => model.Id)
+        </th>*@
             <th>
-                @Html.DisplayNameFor(model => model.Id)
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionDate)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Comment)
             </th>
-           @* <th>
-                @Html.DisplayNameFor(model => model.UserProfile)
-            </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.Customer)
-            </th>
-           
-            <th>
-                @Html.DisplayNameFor(model => model.TransactionDate)
-            </th>
-            <th></th>
+            @* <th>
+            @Html.DisplayNameFor(model => model.UserProfile)
+        </th>*@
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            @* <td>
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>*@
             <td>
-                @Html.DisplayFor(modelItem => item.Id)
+                @Html.DisplayFor(modelItem => item.Customer.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TransactionDate)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Comment)
             </td>
-           @* <td>
-                @Html.DisplayFor(modelItem => item.UserProfile.FullName)
-            </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.Customer.FullName)
-            </td>
-           
-            <td>
-                @Html.DisplayFor(modelItem => item.TransactionDate)
-            </td>
+            @* <td>
+            @Html.DisplayFor(modelItem => item.UserProfile.FullName)
+        </td>*@
+
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
                 @Html.ActionLink("Details", "Details", new { id = item.Id }) |
