@@ -57,6 +57,25 @@ namespace BarberShop.Repositories
                 }
             }
         }
+        public void DeleteTransactionServices(int transactionId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                //in a delete we filter by id to make sure deleting only one 
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM [TransactionService]
+                            WHERE TransactionId = @id
+                        ";
+
+                    cmd.Parameters.AddWithValue("@id", transactionId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
     }
 }

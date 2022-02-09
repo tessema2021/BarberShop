@@ -1,4 +1,4 @@
-﻿@model BarberShop.Models.Transaction
+﻿@model BarberShop.Models.ViewModels.TransactionFormViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,21 +12,31 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input asp-for="Id" type="hidden" class="form-control" />
+            <input asp-for="Transaction.Id" type="hidden" class="form-control" />
             <div class="form-group">
-                <label asp-for="Comment" class="control-label"></label>
-                <input asp-for="Comment" class="form-control" />
-                <span asp-validation-for="Comment" class="text-danger"></span>
+                <label asp-for="Transaction.Comment" class="control-label"></label>
+                <input asp-for="Transaction.Comment" class="form-control" />
+                <span asp-validation-for="Transaction.Comment" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="UserProfileId" type="hidden" class="form-control" />
+                <input asp-for="Transaction.UserProfileId" type="hidden" class="form-control" />
             </div>
-           @* <div class="form-group">
-                <label asp-for="Customer.FullName" class="control-label"></label>
-                <input asp-for="Customer.FullName" class="form-control" />
-                <span asp-validation-for="Customer.FullName" class="text-danger"></span>
-            </div>*@
-          
+            <div class="form-group">
+                <label asp-for="SelectedServiceIds" class="control-label"></label>
+                <select multiple asp-for="SelectedServiceIds" class="form-control">
+                    @foreach (var service in Model.Services)
+                    {
+                        <option selected="@Model.SelectedServiceIds.Contains(service.Id)" value="@service.Id">@service.Name @service.Cost</option>
+                    }
+                </select>
+                <span asp-validation-for="SelectedServiceIds" class="text-danger"></span>
+            </div>
+            @* <div class="form-group">
+                    <label asp-for="Customer.FullName" class="control-label"></label>
+                    <input asp-for="Customer.FullName" class="form-control" />
+                    <span asp-validation-for="Customer.FullName" class="text-danger"></span>
+                </div>*@
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

@@ -10,5 +10,6 @@ namespace BarberShop.Repositories
     public interface ITransactionServiceRepository
     {
         List<TransactionService> GetByTransactionId(int Id);
+        void DeleteTransactionServices(int transactionId);
     }
 }

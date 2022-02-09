@@ -14,19 +14,25 @@ namespace BarberShop.Controllers
 {     [Authorize]
     public class CustomerController : Controller
     {
+        private readonly IUserProfileRepository _userProfileRepository;
         private readonly ICustomerRepository _customerRepo;
         private readonly IServiceRepository _serviceRepo;
         private readonly ICustomerServiceRepository _customerServiceRepo;
-        public CustomerController(ICustomerRepository customerRepository,IServiceRepository serviceRepository,ICustomerServiceRepository customerServiceRepository)
+        public CustomerController(ICustomerRepository customerRepository,IServiceRepository serviceRepository,ICustomerServiceRepository customerServiceRepository,
+                                  IUserProfileRepository userProfileRepository)
         {
             _customerRepo = customerRepository;
             _serviceRepo = serviceRepository;
             _customerServiceRepo = customerServiceRepository;
+            _userProfileRepository = userProfileRepository;
         }
         // GET: CustomerController
         public ActionResult Index()
         {
-            var customers = _customerRepo.GetAllCustomers();
+            int userProfileId = GetCurrentUserId();
+           /* var user = _userProfileRepository.GetById(userProfileId);*/
+            var customers = _customerRepo.GetCustomersByUser(userProfileId);
+            
             return View(customers);
         }
 
@@ -133,7 +139,7 @@ namespace BarberShop.Controllers
                 return View(customer);
             }
 
-            return Unauthorized();
+            return RedirectToAction(nameof(Index));
         }
 
         // POST: CustomerController/Delete/5
@@ -158,7 +164,7 @@ namespace BarberShop.Controllers
                 }
             }
 
-            return Unauthorized();
+            return RedirectToAction(nameof(Index));
         }
 
 

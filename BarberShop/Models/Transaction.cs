@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace BarberShop.Models
         public List<Customer> CustomerList { get; set; }
         [Required(ErrorMessage = "Enter the Transaction date.")]
         [DataType(DataType.Date)]
+        [DisplayName("Transaction Date")]
         public DateTime TransactionDate { get; set; }
         public Service Service { get; set; }
         public int ServiceId { get; set; }
