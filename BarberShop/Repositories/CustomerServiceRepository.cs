@@ -61,46 +61,7 @@ namespace BarberShop.Repositories
             }
         }
 
-       /* public List<CustomerService> GetAllCUstomerServicesByCustomerId(int id)
-        {
-            using (var conn = Connection)
-            {
-                conn.Open();
-                using (var cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = @"
-                           SELECT CustomerService.Id, CustomerService.ServiceId as ServiceId, CustomerService.ServiceId as CustomerId, Service.Name as 'Service Name'
-                            FROM CustomerService
-                            LEFT JOIN Customer ON CustomerService.CustomerId = Customer.Id
-                            LEFT JOIN Service on CustomerService.ServiceId = Service.Id
-                            WHERE Customer.Id = @customerId";
-
-                    cmd.Parameters.AddWithValue("@customerId", id);
-
-                    var customerServices = new List<CustomerService>();
-
-                    var reader = cmd.ExecuteReader();
-
-                    while (reader.Read())
-                    {
-                        CustomerService customerService = new CustomerService()
-                        {
-                            Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            ServiceId = reader.GetInt32(reader.GetOrdinal("ServiceId")),
-                            CustomerId = reader.GetInt32(reader.GetOrdinal("CustomerId")),
-                            Service = new Service
-                            {
-                                Id = reader.GetInt32(reader.GetOrdinal("ServiceId")),
-                                Name = reader.GetString(reader.GetOrdinal("serviceName"))
-                            }
-                        };
-                        customerServices.Add(customerService);
-                    }
-                    reader.Close();
-                    return customerServices;
-                }
-            }
-        }*/
+       
 
 
 
