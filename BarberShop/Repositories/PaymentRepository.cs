@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 namespace BarberShop.Repositories
 {
     
-    public class PaymentRepository : BaseRepository
+    public class PaymentRepository : BaseRepository IPaymentRepository
     {
         public PaymentRepository(IConfiguration config) : base(config) { }
 
         private DateTime dateTime = DateTime.Now;
 
-        public List<Payment> GetAllPaymentss()
+        public List<Payment> GetAllPayments()
         {
 
             using (var conn = Connection)
@@ -23,7 +23,7 @@ namespace BarberShop.Repositories
                 conn.Open();
                 using var cmd = conn.CreateCommand();
                 cmd.CommandText = @"
-                        SELECT Id,PaymentType, Cost,UserProfileId, CreateDateTime,ServiceId
+                        SELECT Id,PaymentType, CustomerId,UserProfileId, CreateDateTime,ServiceId
                          from Payment ;
                     ";
 
@@ -37,7 +37,7 @@ namespace BarberShop.Repositories
                     {
                         Id = reader.GetInt32(reader.GetOrdinal("Id")),
                         PaymentType = reader.GetString(reader.GetOrdinal("PaymentType")),
-                        Cost = reader.GetInt32(reader.GetOrdinal("Cost")),
+                        CustomerId = reader.GetInt32(reader.GetOrdinal("CustomerId")),
                         ServiceId = reader.GetInt32(reader.GetOrdinal("ServiceId")),
                         UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                         CreateDateTime = reader.GetDateTime(reader.GetOrdinal("createDateTime")),

@@ -9,15 +9,12 @@ namespace BarberShop.Models
     public class Payment
     {
         public int Id { get; set; }
+        public int CustomerId { get; set; }
         public int ServiceId { get; set; }
         public List<Service> Services { get; set; }
         public int UserProfileId { get; set; }
         public DateTime CreateDateTime { get; set; }
         public string PaymentType { get; set; }
-        [DisplayName("Price")]
-        public int Cost
-        {
-            get; set;
-        }
+     
     }
 }
