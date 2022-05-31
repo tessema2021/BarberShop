@@ -1,4 +1,5 @@
-﻿using BarberShop.Repositories;
+﻿using BarberShop.Models;
+using BarberShop.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -39,15 +40,18 @@ namespace BarberShop.Controllers
         // POST: PaymentController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(Payment payment)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+
+
+                _paymentRepo.AddPayment(payment);
+                return RedirectToAction("Index");
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                return View(payment);
             }
         }
 

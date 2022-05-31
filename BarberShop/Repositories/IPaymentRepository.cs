@@ -9,5 +9,7 @@ namespace BarberShop.Repositories
    public interface IPaymentRepository
     {
          List<Payment> GetAllPayments();
+         Payment GetPaymentById(int Id);
+        void AddPayment(Payment payment);
     }
 }
